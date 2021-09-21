@@ -10,7 +10,7 @@ module.exports = function mdLinks (path, options) {
 
   function fnReadReady(data, error){
  
-    //console.log(data);
+    console.log(data);
     //let ss = fs.createReadStream(path);
     //console.log(ss.on());
 
@@ -18,15 +18,12 @@ module.exports = function mdLinks (path, options) {
          input: fs.createReadStream(path)
     });
 
-    lector.forEach((line, index) => {
-      console.log({ line, index });
+    lector.on('line', linea => {
+     console.log('linea', linea);
     });
 
-    console.log(lines)
-    
 
 
-  
 
 
 
