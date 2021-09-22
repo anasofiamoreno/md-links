@@ -35,7 +35,10 @@ module.exports = function mdLinks (path, options) {
       linesToEvaluate.map( (element) => {
         if(element.includes('https')){
           //console.log('linea ' + numLinea, element);
-          const ss = element.slice(element.indexOf('https')).split(')')
+          const ss = element.slice(element.indexOf('https')).split(')');
+          console.log(element);
+          const text = element.slice(element.indexOf('[')).split(']');
+          console.log(text);
           //console.log('Url:',ss[0]);
           listUrls.push(ss[0]);
           //request.addEventListener('load',function() {console.log(request.status, request._url.href)});
