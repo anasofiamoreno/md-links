@@ -1,8 +1,11 @@
 #!/usr/bin/env node
-const mdLinks = require("./script");
-const fnPrintInfor = require("./printinfo.js");
 
-let option = { validate: false, stats: false };
+const mdLinks = require("./scriptfetch.js");             //Importa funcion md-links.
+const fnPrintInfo = require("./printinfo.js");  //Importa funcion para mostrar en terminal.
+
+let option = { validate: false, stats: false };  //Objeto con opciones de validacion.
+
+
 
 switch (process.argv[3]) {
   case "--validate":
@@ -10,8 +13,8 @@ switch (process.argv[3]) {
     if (process.argv[4] == "--stats") {
       option.stats = true;
     }
-    mdLinks(process.argv[2], option).then((message) => {
-      fnPrintInfor(message, option);
+    mdLinks(process.argv[2], option).then((arrayWithObjects) => {
+      fnPrintInfo(arrayWithObjects, option);
     });
     break;
   case "--stats":
@@ -19,15 +22,16 @@ switch (process.argv[3]) {
     if (process.argv[4] == "--validate") {
       option.validate = true;
     }
-    mdLinks(process.argv[2], option).then((message) => {
-      fnPrintInfor(message, option);
+    mdLinks(process.argv[2], option).then((arrayWithObjects) => {
+      fnPrintInfo(arrayWithObjects, option);
     });
     break;
   case undefined:
-    mdLinks(process.argv[2], option).then((message) => {
-      fnPrintInfor(message, option);
+    mdLinks(process.argv[2], option).then((arrayWithObjects) => {
+      fnPrintInfo(arrayWithObjects, option);
     });
     break;
   default:
-    console.log("comando no valido");
+    console.log("Comando no valido");
+    console.log("Puede Utilizar --Validate o --stats");
 }

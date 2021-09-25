@@ -1,8 +1,34 @@
 {
   "name": "md-links",
-  "version": "0.1.0",
-  "bin": "./index.js",
+  "version": "1.0.0",
+  "bin": {
+    "md-links": "index.js"
+  },
   "dependencies": {
+    "colors": "^1.4.0",
+    "eslint": "^7.32.0",
+    "node-fetch": "^2.0.4",
+    "node-fetch-npm": "^2.0.4",
     "xhr2": "^0.2.1"
-  }
+  },
+  "description": "## Índice",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anasofiamoreno/CDMX011-md-links.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anasofiamoreno/CDMX011-md-links/issues"
+  },
+  "homepage": "https://github.com/anasofiamoreno/CDMX011-md-links#readme"
 }

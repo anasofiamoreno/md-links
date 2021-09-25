@@ -1,4 +1,6 @@
 module.exports = function fnPrintInfo(message, option) {
+  let colors = require('colors');
+
   let uniques = [];
   let corrects = 0;
   let incorrects = 0;
@@ -52,54 +54,14 @@ module.exports = function fnPrintInfo(message, option) {
         }
       });
       corrects.forEach((element) => {
-        process.stdout.write(
-          "line " +
-            element.line +
-            " " +
-            "\033[32m" +
-            element.file +
-            " " +
-            "\x1b[0m" +
-            "\x1b[4m" +
-            element.href +
-            "\x1b[0m" +
-            "\x1b[37m" +
-            " " +
-            "\033[32m" +
-            element.ok +
-            " " +
-            "\x1b[33m" +
-            element.status +
-            " " +
-            "\x1b[0m" +
-            element.text.slice(0, 30) +
-            "\n"
-        );
+
+        console.log('Line', element.line, element.file.italic, element.href.green.bold.underline, element.ok.green, element.status, element.text );
+
       });
       incorrects.forEach((element) => {
-        process.stdout.write(
-          "line " +
-            element.line +
-            " " +
-            "\033[31m" +
-            element.file +
-            " " +
-            "\x1b[0m" +
-            "\x1b[4m" +
-            element.href +
-            "\x1b[0m" +
-            "\x1b[37m" +
-            " " +
-            "\033[31m" +
-            element.ok +
-            " " +
-            "\x1b[33m" +
-            element.status +
-            " " +
-            "\x1b[0m" +
-            element.text.slice(0, 30) +
-            "\n"
-        );
+
+        console.log('Line', element.line, element.file.italic, element.href.red.bold.underline, element.ok.red, element.status, element.text );
+
       });
     } else {
       message.forEach((element) => {
@@ -113,5 +75,7 @@ module.exports = function fnPrintInfo(message, option) {
       });
     }
   }
+  console.log('');
   process.exit();
+
 };

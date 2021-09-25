@@ -1,12 +1,13 @@
+#!/usr/bin/env node
 module.exports = function mdLinks(path, options) {
   return new Promise((resolveToIndex, rejectToIndex) => {
-    var XMLHttpRequest = require("xhr2"); //Import para funcionamiento de XMLHttpRequest
     let readline = require("readline"); //Import para funcionamiento leer lineas de archivos de texto plano en NODE
     let fs = require("fs"); //Import para poder leer archivos de textoplano en NODE
-    global.fetch = require('node-fetch-npm').default;
+    fetch = require('node-fetch-npm');
+  
 
 
-
+  
     let listUrls = []; //Array donde se guardan todas las URL encontradas, junto con el texto y numero de linea.
     let contListUrls = 0; //Contador de cada respuestas de servidores.
     let allLines = []; //Array con todas las lineas del archivo .md.
@@ -25,9 +26,10 @@ module.exports = function mdLinks(path, options) {
     }
     else{
       mdFiles.push(path);
+      
     }
 
-    let lector = [];
+
     mdFiles.forEach((file) => {
       lector = readline.createInterface({
         input: fs.createReadStream(file),
@@ -64,14 +66,11 @@ module.exports = function mdLinks(path, options) {
               line: i + 1,
               text: textOfUrl[0],
             };
-            let request = new XMLHttpRequest();
-            console.log('Direccion mandada',urlObtained[0])
-            request.open("HEAD", urlObtained[0], true);
-            request.send(null);
 
-            request.onreadystatechange = function () {
-              if (request.readyState == 4) {
-                //console.log(request._url);
+            fetch(urlObtained[0]).then((request) => {
+
+
+
                 contListUrls++;
                 let statusIsValid = new String();
                 if (request.status >= 200 && request.status <= 399) {
@@ -82,7 +81,7 @@ module.exports = function mdLinks(path, options) {
 
                 if (options.validate) {
                   response.push({
-                    href: request._url.href,
+                    href: request.url,
                     text: infoOfLink.text,
                     file: path,
                     status: request.status,
@@ -91,21 +90,61 @@ module.exports = function mdLinks(path, options) {
                   });
                 } else {
                   response.push({
-                    href: request._url.href,
+                    href: request.url,
                     text: infoOfLink.text,
                     file: path,
                     line: infoOfLink.line,
                   });
                 }
 
+               
+                process.stdout.clearLine();
+                process.stdout.cursorTo(0);
+                process.stdout.write(`Processing ${Math.trunc((contListUrls/listUrls.length)*100)}%...`);
+
                 if (contListUrls == listUrls.length) {
+                  process.stdout.clearLine();
+                  process.stdout.cursorTo(0);
+                  console.log('');
                   resolveMultiHtml(response);
                 }
+            
+
+
+            })
+            .catch(() => {
+              contListUrls++;
+              if (options.validate) {
+                response.push({
+                  href: infoOfLink.url,
+                  text: infoOfLink.text,
+                  file: path,
+                  status: 0,
+                  ok: 'fail',
+                  line: infoOfLink.line,
+                });
+              } else {
+                response.push({
+                  href: infoOfLink.url,
+                  text: infoOfLink.text,
+                  file: path,
+                  line: infoOfLink.line,
+                });
               }
-            };
+
+              if (contListUrls == listUrls.length) {
+                resolveMultiHtml(response);
+              }
+            })
+            
           }
         });
       });
     }
+
+function fmMakeaObject(){
+
+}
+
   });
 };
