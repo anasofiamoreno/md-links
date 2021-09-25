@@ -15,56 +15,63 @@ module.exports = function mdLinks(path, options) {
     let urlObtained = ""; //String donde se guardan temporalmente laURL de cada linea.
     let textOfUrl = ""; //String donde se guardan temporalmente el texto de cada URL.
     let mdFiles = [];
+    let contFiles = 0;
 
     if (!path.includes(".md")) {
       let files = fs.readdirSync(path);
       files.forEach((file) => {
         if (file.includes(".md" || ".txt")) {
           mdFiles.push(path +  '/' + file);
+          
         }
       });
     }
     else{
-      mdFiles.push(path);
-      
+      mdFiles.push(path); 
     }
 
+  
 
     mdFiles.forEach((file) => {
-      lector = readline.createInterface({
-        input: fs.createReadStream(file),
+      let numLineOnFile = new Number();
+      lector = new readline.createInterface({
+        
+        input: new fs.createReadStream(file),
+      }).on("line", (line,i) => {
+        
+        numLineOnFile++;
+        allLines.push([line,file,numLineOnFile]);
+      })
+      .on("close", () => {
+      contFiles++
+      if(contFiles == mdFiles.length){
+        fnValite(allLines, numLineOnFile)
+      }
       });
     });
 
     
      
 
-    lector //Procesa las lineas y genera un array de lineas para ser analizado en busca de urls.
-      .on("line", (line) => {
-        allLines.push(line);
-      })
-      .on("close", () => {
-        fnValite(allLines).then((arrayWithObjects) => {
-          resolveToIndex(arrayWithObjects);
-        });
-      });
+    
 
-    function fnValite(linesToEvaluate) {
-      return new Promise((resolveMultiHtml, rejectMultiHtml) => {
-        linesToEvaluate.map((elementLineToEvaluate, i) => {
-          if (elementLineToEvaluate.includes("https://")) {
-            urlObtained = elementLineToEvaluate
-              .slice(elementLineToEvaluate.indexOf("https://"))
+    function fnValite(linesToEvaluate, numLineOnFile) {
+        linesToEvaluate.map((elementLineToEvaluate) => {
+          
+          if (elementLineToEvaluate[0].includes("https://")) {
+            urlObtained = elementLineToEvaluate[0]
+              .slice(elementLineToEvaluate[0].indexOf("https://"))
               .split(")");
-            textOfUrl = elementLineToEvaluate
+            textOfUrl = elementLineToEvaluate[0]
               .slice(elementLineToEvaluate.indexOf("[") + 1)
               .split("]");
-            listUrls.push([urlObtained[0], i + 1, textOfUrl[0]]);
+            listUrls.push([urlObtained[0],elementLineToEvaluate[2], textOfUrl[0]]);
             let infoOfLink = new Object();
             infoOfLink = {
               url: urlObtained[0],
-              line: i + 1,
+              line: elementLineToEvaluate[2],
               text: textOfUrl[0],
+              file: elementLineToEvaluate[1]
             };
 
             fetch(urlObtained[0]).then((request) => {
@@ -83,7 +90,7 @@ module.exports = function mdLinks(path, options) {
                   response.push({
                     href: request.url,
                     text: infoOfLink.text,
-                    file: path,
+                    file: infoOfLink.file,
                     status: request.status,
                     ok: statusIsValid,
                     line: infoOfLink.line,
@@ -92,7 +99,7 @@ module.exports = function mdLinks(path, options) {
                   response.push({
                     href: request.url,
                     text: infoOfLink.text,
-                    file: path,
+                    file: infoOfLink.file,
                     line: infoOfLink.line,
                   });
                 }
@@ -106,7 +113,7 @@ module.exports = function mdLinks(path, options) {
                   process.stdout.clearLine();
                   process.stdout.cursorTo(0);
                   console.log('');
-                  resolveMultiHtml(response);
+                  resolveToIndex(response);
                 }
             
 
@@ -118,7 +125,7 @@ module.exports = function mdLinks(path, options) {
                 response.push({
                   href: infoOfLink.url,
                   text: infoOfLink.text,
-                  file: path,
+                  file: infoOfLink.file,
                   status: 0,
                   ok: 'fail',
                   line: infoOfLink.line,
@@ -127,24 +134,23 @@ module.exports = function mdLinks(path, options) {
                 response.push({
                   href: infoOfLink.url,
                   text: infoOfLink.text,
-                  file: path,
+                  file: infoOfLink.file,
                   line: infoOfLink.line,
                 });
               }
 
-              if (contListUrls == listUrls.length) {
-                resolveMultiHtml(response);
-              }
+                if (contListUrls == listUrls.length) {
+                  process.stdout.clearLine();
+                  process.stdout.cursorTo(0);
+                  console.log('');
+                  resolveToIndex(response);
+                }
             })
             
           }
         });
-      });
+      
     }
-
-function fmMakeaObject(){
-
-}
 
   });
 };

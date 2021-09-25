@@ -15,8 +15,18 @@ module.exports = function fnPrintInfo(message, option) {
       return -1;
     }
 
-    return 0;
+  }).sort((a, b) => {
+    if (a.file > b.file) {
+      return 1;
+    }
+    if (a.file < b.file) {
+      return -1;
+    }
+
   });
+
+ 
+  
 
   if (option.stats) {
     process.stdout.write(
@@ -55,12 +65,12 @@ module.exports = function fnPrintInfo(message, option) {
       });
       corrects.forEach((element) => {
 
-        console.log('Line', element.line, element.file.italic, element.href.green.bold.underline, element.ok.green, element.status, element.text );
+        console.log('Line', element.line, element.file.italic, element.href.green.bold.underline, element.ok.green, element.status, element.text.slice(0, 30 ));
 
       });
       incorrects.forEach((element) => {
 
-        console.log('Line', element.line, element.file.italic, element.href.red.bold.underline, element.ok.red, element.status, element.text );
+        console.log('Line', element.line, element.file.italic, element.href.red.bold.underline, element.ok.red, element.status, element.text.slice(0, 30 ));
 
       });
     } else {
