@@ -1,5 +1,5 @@
 module.exports = function fnPrintInfo(message, option) {
-  let colors = require('colors');
+  let colors = require("colors");
 
   let uniques = [];
   let corrects = 0;
@@ -7,26 +7,23 @@ module.exports = function fnPrintInfo(message, option) {
   let brokenLinks = 0;
   let porcentWorking = 0;
 
-  message.sort((a, b) => {
-    if (a.line > b.line) {
-      return 1;
-    }
-    if (a.line < b.line) {
-      return -1;
-    }
-
-  }).sort((a, b) => {
-    if (a.file > b.file) {
-      return 1;
-    }
-    if (a.file < b.file) {
-      return -1;
-    }
-
-  });
-
- 
-  
+  message
+    .sort((a, b) => {
+      if (a.line > b.line) {
+        return 1;
+      }
+      if (a.line < b.line) {
+        return -1;
+      }
+    })
+    .sort((a, b) => {
+      if (a.file > b.file) {
+        return 1;
+      }
+      if (a.file < b.file) {
+        return -1;
+      }
+    });
 
   if (option.stats) {
     process.stdout.write(
@@ -43,12 +40,14 @@ module.exports = function fnPrintInfo(message, option) {
           return element;
         }
       });
-      porcentWorking = Math.round(100 - (brokenLinks.length/Array.from(uniques).length) * 100);
+      porcentWorking = Math.round(
+        100 - (brokenLinks.length / Array.from(uniques).length) * 100
+      );
       process.stdout.write(
         "Broken " + "\033[31m" + brokenLinks.length + "\033[0m" + "\n"
       );
       process.stdout.write(
-        "Working " + '\033[34m' + porcentWorking + '%' + "\033[0m" + "\n"
+        "Working " + "\033[34m" + porcentWorking + "%" + "\033[0m" + "\n"
       );
     }
   } else {
@@ -64,14 +63,38 @@ module.exports = function fnPrintInfo(message, option) {
         }
       });
       corrects.forEach((element) => {
-
-        console.log('Line', element.line, element.file.italic, element.href.green.bold.underline, element.ok.green, element.status, element.text.slice(0, 30 ));
-
+        if (typeof element.status == "number") {
+          console.log(
+            "Line",
+            element.line,
+            element.file.italic,
+            element.href.green.bold.underline,
+            element.ok.green,
+            element.status,
+            element.text.slice(0, 30)
+          );
+        } else {
+          console.log(
+            "Line",
+            element.line,
+            element.file.italic,
+            element.href.yellow.bold.underline,
+            element.ok.green,
+            element.status.yellow,
+            element.text.slice(0, 30)
+          );
+        }
       });
       incorrects.forEach((element) => {
-
-        console.log('Line', element.line, element.file.italic, element.href.red.bold.underline, element.ok.red, element.status, element.text.slice(0, 30 ));
-
+        console.log(
+          "Line",
+          element.line,
+          element.file.italic,
+          element.href.red.bold.underline,
+          element.ok.red,
+          element.status,
+          element.text.slice(0, 30)
+        );
       });
     } else {
       message.forEach((element) => {
@@ -85,7 +108,6 @@ module.exports = function fnPrintInfo(message, option) {
       });
     }
   }
-  console.log('');
+  console.log("");
   process.exit();
-
 };
