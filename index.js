@@ -17,7 +17,7 @@ if (process.argv.length >= 2) {
       case "--stats":
         option.stats = true;
         break;
-      case "help":
+      case "--help":
         noProblems = "fail";
         fs.readFile(
           "/Users/anasofia/Documents/GitHub/CDMX011-md-links/README.md",
@@ -32,6 +32,8 @@ if (process.argv.length >= 2) {
           noProblems = "fail";
           console.log("Invalid command");
           console.log("Uses --validate or --stats");
+          console.log("--help")
+
         }
     }
   }
