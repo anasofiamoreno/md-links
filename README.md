@@ -8,7 +8,7 @@ md-links is used to find all the links in an .md file that comply with the link 
 
 both commands can be used at the same time
 
-command structure: md-links \<dir\> <command> <command>
+command structure: md-links \<dir\> \<command\> \<command\>
 
 ## Responses
 * On empy commands : the response include the line of the link, the file name, link of de line and the text of the link.
