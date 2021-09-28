@@ -63,7 +63,7 @@ module.exports = function fnPrintInfo(message, option) {
         }
       });
       corrects.forEach((element) => {
-        if (typeof element.status == "number") {
+        if (element.hrefanswer == element.href) {
           console.log(
             "Line",
             element.line,
@@ -79,8 +79,10 @@ module.exports = function fnPrintInfo(message, option) {
             element.line,
             element.file.italic,
             element.href.yellow.bold.underline,
+            "=>".red.bold,
+            element.hrefanswer.yellow.bold.underline,
             element.ok.green,
-            element.status.yellow,
+            element.status,
             element.text.slice(0, 30)
           );
         }

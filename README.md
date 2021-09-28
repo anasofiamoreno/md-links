@@ -10,11 +10,15 @@ both commands can be used at the same time
 
 command structure: md-links \<dir\> \<command\> \<command\>
 
-## Responses
-* On empy commands : the response include the line of the link, the file name, link of de line and the text of the link.
-* On --validate commands : the response includes the line of the link, the file name, link of the line, status of response, code of status an the testx of the link.
+## Responses (Case of commands)
+
+* On empy command : the response include the line of the link, the file name, link of de line and the text of the link.
+
+* On --validate command : the response includes the line of the link, the file name, link of the line, status of   response, code of status an the testx of the link.
 (Green: response ok, Yellow: response ok but responsed other url, red: bad response).
-* On --stats commands :  the response includes total links found and uniques links.
+
+* On --stats command :  the response includes total links found and uniques links.
+
 * On --stats and --validate : the response includes total links found, uniques links, broken links and working links porcent.
 
 ### Support

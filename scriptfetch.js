@@ -18,14 +18,15 @@ module.exports = function mdLinks(path, options) {
       try {
         files = fs.readdirSync(path);
       } catch (erre) {
-        console.log("Dir not found".red);
+        rejectToIndex("Error dir not found");
       }
+
       files.forEach((file) => {
         if (file.includes(".md" || ".txt")) {
           mdFiles.push(path + "/" + file);
         }
       });
-      checkNoFile("No file .MD found");
+      checkNoFile("Error no file .MD found");
     } else {
       if (path.includes(".md" || ".txt")) {
         mdFiles.push(path);
@@ -36,8 +37,11 @@ module.exports = function mdLinks(path, options) {
 
     mdFiles.forEach((file) => {
       let numLineOnFile = new Number();
+      let fileCreated = [];
+
+      fileCreated = new fs.createReadStream(file).on("error", (err) => rejectToIndex("Error file",err.path, "no found"));
       lector = new readline.createInterface({
-        input: new fs.createReadStream(file),
+        input: fileCreated,
       })
         .on("line", (line, i) => {
           numLineOnFile++;
@@ -90,22 +94,19 @@ module.exports = function mdLinks(path, options) {
                 statusIsValid = "fail";
               }
 
-              let preStatus = request.status;
-              let preHref = request.url;
-
-              if (!request.url.includes(infoOfLink.url)) {
-                preHref = infoOfLink.url + " => " + request.url;
-                preStatus = request.status.toString();
+              if (request.url[request.url.length - 1] == "/") {
+                request.url = request.url.slice(0, -1);
               }
 
               if (options.validate) {
                 response.push({
-                  href: preHref,
+                  href: infoOfLink.url,
                   text: infoOfLink.text,
                   file: infoOfLink.file,
-                  status: preStatus,
+                  status: request.status,
                   ok: statusIsValid,
                   line: infoOfLink.line,
+                  hrefanswer: request.url,
                 });
               } else {
                 response.push({
