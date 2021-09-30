@@ -4,9 +4,17 @@
   "bin": {
     "md-links": "index.js"
   },
+  "jest": {
+    "verbose": true,
+    "globals": {
+      "__DEV__": true,
+      "__RCTProfileIsProfiling": false
+    }
+  },
   "dependencies": {
     "colors": "^1.4.0",
     "eslint": "^7.32.0",
+    "jest": "^27.2.4",
     "node-fetch": "^2.0.4",
     "node-fetch-npm": "^2.0.4",
     "xhr2": "^0.2.1"
@@ -16,7 +24,6 @@
   "directories": {
     "test": "test"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "jest --coverage --watch"
   },

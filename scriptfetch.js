@@ -2,7 +2,7 @@ module.exports = function mdLinks(path, options) {
   return new Promise((resolveToIndex, rejectToIndex) => {
     let readline = require("readline"); //Import para funcionamiento leer lineas de archivos de texto plano en NODE
     let fs = require("fs"); //Import para poder leer archivos de textoplano en NODE
-    fetch = require("node-fetch-npm"); // Importa Fetch.
+    //fetch = require("node-fetch-npm"); // Importa Fetch.
 
     let listUrls = []; //Array donde se guardan todas las URL encontradas, junto con el texto y numero de linea.
     let contListUrls = 0; //Contador de cada respuestas de servidores.
@@ -13,6 +13,8 @@ module.exports = function mdLinks(path, options) {
     let mdFiles = []; //Array con Lins de archivos .md.
     let contFiles = 0; //Contador de archivos analizados.
     let files = []; //Array con archivos encontrados.
+
+    //console.log("on md-links", path);
 
     if (path.split(".")[1] == undefined) {
       try {
@@ -34,7 +36,7 @@ module.exports = function mdLinks(path, options) {
         checkNoFile("Error file no .MD");
       }
     }
-
+    //console.log("on md-links mdfiles", mdFiles);
     mdFiles.forEach((file) => {
       let numLineOnFile = new Number();
       let fileCreated = [];
@@ -56,6 +58,7 @@ module.exports = function mdLinks(path, options) {
     });
 
     function fnValite(linesToEvaluate) {
+      //console.log("on md-links lines to evaluate", linesToEvaluate);
       linesToEvaluate.map((elementLineToEvaluate) => {
         if (elementLineToEvaluate[0].includes("](http")) {
           //urlObtained = elementLineToEvaluate[0].slice(elementLineToEvaluate[0].indexOf("](")+2,elementLineToEvaluate[0].indexOf(")"))
@@ -86,6 +89,7 @@ module.exports = function mdLinks(path, options) {
 
           fetch(urlObtained)
             .then((request) => {
+              //console.log("on md-links request", request);
               contListUrls++;
               let statusIsValid = new String();
               if (request.status >= 200 && request.status <= 399) {
