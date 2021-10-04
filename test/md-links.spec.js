@@ -1,27 +1,45 @@
-const mdLinks = require("../scriptfetch.js"); //Importa funcion md-links.
-//const fnPrintInfo = require("../printinfo.js"); //Importa funcion para mostrar en terminal.
-//const filetest = require("../testlinks.md"); //Importa funcion md-links.
+const scriptfetch = require("../scriptfetch.js"); //Importa funcion md-links.
 const mocksResponse = require("./mocks.js"); //Importa funcion md-links.
-const mockfetch = require("../test/mockfetch.js"); //Importa funcion md-links.
+const mockfetch = require("./mockfetch.js"); //Importa funcion md-links.
 let colors = require("colors");
-const mockResponse = require("./mocks.js");
 
 const option = { validate: false, stats: false }; //Objeto con opciones de validacion.
-const dirTest = "/Users/anasofia/Documents/GitHub/CDMX011-md-links/diferentslinks.md";
-global.fetch() = mockfetch;
+const dirTest = "/Users/anasofia/Documents/GitHub/md-links/test/onelink.md";
+jest.mock('node-fetch-npm');
 
-
+global.fetch = mockfetch.mockfetch;
+global.fnFindHTML = scriptfetch.fnFindHTML
+global.mdLinks = scriptfetch.mdLinks
 
 
 test("Validar archivo .md con mock", () => {
-    fetch("http").then(() => {console.log("entro");})
-    //await mdLinks(dirTest, option).resolves.toBe(mockResponse);
 
-    return expect(mdLinks(dirTest, option)).resolves.toBe(mockResponse);
-  /*
-  .then((result) => {
-    console.log("0n test", result);
-    expect(result).toBe(mockResponse);
-  }).catch((error) => {console.log("Error----------------", error)});
-  */
+  mdLinks(dirTest, option)
+    .then((arrayWith) => {
+      console.log("This array", arrayWith);
+      console.log("Correct", mocksResponse);
+      //expect(arrayWith).toBe(mocksResponse);
+    })
+    .catch((error) => {
+      console.log("Error ----- ", error);
+    });
+    
 });
+
+test("Function fnFindHTML(), encontrar html en linea de texto", () =>{
+  fnFindHTML(["[Google](https://www.google.com)"]).then((responseHTML) => {
+    expect(responseHTML.url).toBe('https://www.google.com');
+  });
+
+});
+
+test("Function fetch(), response of fetch", () =>{
+  mockfetch.mockfetch("https://www.google.com").then((responseFetch) => {
+    expect(responseFetch.url + " " + responseFetch.status).toBe("https://www.google.com 200");
+  });
+
+});
+
+
+
+

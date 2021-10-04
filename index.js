@@ -44,7 +44,7 @@ for (let i = 2; i <= process.argv.length - 1; i++) {
   }
 }
 if (noProblems == "ok") {
-  mdLinks(process.argv[2], option)
+  mdLinks.mdLinks(process.argv[2], option)
     .then((arrayWithObjects) => {
       fnPrintInfo(arrayWithObjects, option);
     })
